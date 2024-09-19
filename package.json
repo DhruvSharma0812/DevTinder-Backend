@@ -1,0 +1,21 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Tinder Like App for Developer",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev" : "nodemon src/app.js"
+  },
+  "keywords": [
+    "Node",
+    "js",
+    "MERN",
+    "DevTinder"
+  ],
+  "author": "Dhruv Sharma",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
