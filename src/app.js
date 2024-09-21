@@ -1,109 +1,29 @@
 const express = require('express');
-
 const app = express();
+const {adminAuth, userAuth} = require ('./middleware/auth.js')
 
-// If we don't send anything it will go to infinite loop
-// app.get ('/user', (req, res) => {
-//     console.log ("Hellor from Route Handler...");
-// })
+app.use ("/admin", adminAuth)
 
-// In console it show only hello from route handler 1 
-// and send back response 1 as there is no next call
-// app.get ('/user', (req, res) => {
-//     // Route Handler 1
-//     console.log ("Hellor from Route Handler 1...");
-//     res.send ("Response 1...!!");
-//     },
-//     (req, res) => {
-//         // Route Hanlder 2
-//         console.log ("Hello from Route Hanlder 2");
-//         res.send ("Response 2..!");
-//     }
-// )
+app.get ('/user/data', userAuth, (req, res) => {
+    console.log ("User data sent")
+    res.send ("User Data sent");
+})
 
-// In console it shows hello from rh 1, rh2 both
-// and send back Response 2 as we are not sending anything from route 1
-// app.get ('/user', (req, res, next) => {
-//     // Route Handler 1
-//     console.log ("Hello from Route Handler 1...");
-//     next();
+app.get ('/user/login', (req, res) => {
+    console.log ("User logg in");
+    res.send ("Login")
+})
 
-//     },
-//     (req, res) => {
-//         // Route Hanlder 2
-//         console.log ("Hello from Route Hanlder 2");
-//         res.send ("Response 2..!");
-//     }
-// )
+app.get ("/admin/getData", (req, res) => {
+    console.log ("All Data sent")
+    res.send ("All Data sent")
+})
 
-// On console it print hello from rh 1, rh2 both but after that we have error
-// error because we are returning 2 times from same url
-// and sendBack only response 1
-// app.get ('/user', (req, res, next) => {
-//     // Route Handler 1
-//     console.log ("Hello from Route Handler 1...");
-//     res.send("Response 1...!");
-//     next();
+app.get ("/admin/deleteUser", (req, res) => {
+    console.log ("User Deleted")
+    res.send ("User Deleted")
+})
 
-//     },
-//     (req, res) => {
-//         // Route Hanlder 2
-//         console.log ("Hello from Route Hanlder 2");
-//         res.send ("Response 2..!");
-//     }
-// )
-
-// On console it print hello from rh 1, rh2 both but after that we have error
-// error because we are returning 2 times from same url
-// and sendBack only response 2
-// app.get ('/user', (req, res, next) => {
-//     // Route Handler 1
-//     console.log ("Hello from Route Handler 1...");
-//     next();
-//     res.send("Response 1...!");
-
-//     },
-//     (req, res) => {
-//         // Route Hanlder 2
-//         console.log ("Hello from Route Hanlder 2");
-//         res.send ("Response 2..!");
-//     }
-// )
-
-// You can return as many route handler as you want
-app.get ('/user', 
-    [(req, res, next) => {
-        // Route Handler 1
-        console.log ("Hello from Route Handler 1...");
-        next();
-        // res.send("Response 1...!");
-
-    },
-    (req, res, next) => {
-        // Route Hanlder 2
-        console.log ("Hello from Route Hanlder 2");
-        // res.send ("Response 2..!");
-        next();
-    },
-    (req, res, next) => {
-        // Route Hanlder 2
-        console.log ("Hello from Route Hanlder 3");
-        // res.send ("Response 2..!");
-        next();
-    },
-    (req, res, next) => {
-        // Route Hanlder 2
-        console.log ("Hello from Route Hanlder 4");
-        // res.send ("Response 2..!");
-        next();
-    },
-    (req, res, next) => {
-        // Route Hanlder 2
-        console.log ("Hello from Route Hanlder 5");
-        res.send ("Response 2..!");
-        next();
-    },]
-)
 
 app.listen(7777, () => {
     // This function takes port number and callback function
