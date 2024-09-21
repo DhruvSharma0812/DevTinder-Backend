@@ -2,26 +2,22 @@ const express = require('express');
 const app = express();
 const {adminAuth, userAuth} = require ('./middleware/auth.js')
 
-app.use ("/admin", adminAuth)
+app.get ("/getUserData", (req, res) => {
+    try {
+        // Logic for DB Connection
+        throw new Error ("Random Error....!!");
+        res.send ("User Data Sent");
+    }
 
-app.get ('/user/data', userAuth, (req, res) => {
-    console.log ("User data sent")
-    res.send ("User Data sent");
+    catch (err) {
+        res.status(500).send ("Something Went Wring from try-catch")
+    }
 })
 
-app.get ('/user/login', (req, res) => {
-    console.log ("User logg in");
-    res.send ("Login")
-})
-
-app.get ("/admin/getData", (req, res) => {
-    console.log ("All Data sent")
-    res.send ("All Data sent")
-})
-
-app.get ("/admin/deleteUser", (req, res) => {
-    console.log ("User Deleted")
-    res.send ("User Deleted")
+app.use ("/", (err, req, res, next) => {
+    if (err) {
+        res. status (500). send ("Something went wrong from app use /")
+    }
 })
 
 
