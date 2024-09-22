@@ -57,6 +57,24 @@ app.get ("/feed", async (req, res) => {
     }
 })
 
+// API call to get uesr by ID
+app.get ('/userID', async (req, res) => {
+    const userID = req.body.id;
+    try {
+        console.log (userID)
+        const user = await User.findById ( userID );
+        if (!user) {
+            res.status (400).send ("User Not Found...!");
+        }
+        else {
+            res.send (user);
+        }
+    }
+    catch (err) {
+        res.status(400).send("Something Went Wrong")
+    }
+})
+
 connectDB()
     .then(() => {
         console.log("Database Connected Succesfully....!");
