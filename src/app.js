@@ -59,10 +59,10 @@ app.get ("/feed", async (req, res) => {
 
 // API call to get uesr by ID
 app.get ('/userID', async (req, res) => {
-    const userID = req.body.id;
+    const userId = req.body.userId;
     try {
-        console.log (userID)
-        const user = await User.findById ( userID );
+        console.log (userId)
+        const user = await User.findById ( userId );
         if (!user) {
             res.status (400).send ("User Not Found...!");
         }
@@ -74,6 +74,80 @@ app.get ('/userID', async (req, res) => {
         res.status(400).send("Something Went Wrong")
     }
 })
+
+// API call to DELETE user by ID
+app.delete ("/user", async (req, res) => {
+    const userId = req.body.userId;
+
+    try {
+        const user = await User.findByIdAndDelete (userId);
+        res.send ({
+            message : "User Deleted Successfully...!",
+            userDeleted : user
+        });
+    }
+    catch (err) {
+        res.status(400).send ("Something Went Wrong...!!" + err.message);
+    }
+})
+
+// API call to UPDATE user by ID
+app.patch("/user", async (req, res) => {
+    const userId = req.body.userId; // Ensure this is correctly referenced
+    const data = req.body; // Get all data from the body
+
+    try {
+        // Await the result of the update operation
+        const user = await User.findByIdAndUpdate(userId, data, {
+            new: true, // To return the updated document
+            runValidators: true // To ensure validation rules are applied
+        });
+
+        if (!user) {
+            return res.status(404).send({
+                message: "User not found",
+            });
+        }
+
+        console.log(user);
+        res.send({
+            message: "User Updated Successfully...!",
+            Updated_USER: user,
+        });
+    } catch (err) {
+        res.status(400).send("Something Went Wrong...!!!!!!!!" + err.message);
+    }
+});
+
+// API call to UPDATE user by email
+app.patch("/userEmail", async (req, res) => {
+    const userEmail = req.body.emailId; // Ensure this is correctly referenced
+    const data = req.body; // Get all data from the body
+
+    try {
+        // Await the result of the update operation
+        const user = await User.findOneAndUpdate(  { emailId : userEmail } , data, {
+            new: true, // To return the updated document
+            runValidators: true // To ensure validation rules are applied
+        });
+
+        if (!user) {
+            return res.status(404).send({
+                message: "User not found",
+            });
+        }
+
+        console.log(user);
+        res.send({
+            message: "User Updated Successfully...!",
+            Updated_USER: user,
+        });
+    } catch (err) {
+        res.status(400).send("Something Went Wrong...!!!!!!!!" + err.message);
+    }
+});
+
+
 
 connectDB()
     .then(() => {
