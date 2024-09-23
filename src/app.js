@@ -1,55 +1,55 @@
 const express = require('express');
 const app = express();
 const connectDB = require("./config/database");
-const User = require ("./model/user");
+const User = require("./model/user");
 
-app.use (express.json());
+app.use(express.json());
 
 // API call for signup
-app.post ("/signup", async (req, res) => {
+app.post("/signup", async (req, res) => {
     // creating new instance of user Model
-    console.log (req.body);
-    const user = new User (req.body);
+    console.log(req.body);
+    const user = new User(req.body);
 
     try {
-        await user.save ();
-        res.send ("User Added Successfully...!");
+        await user.save();
+        res.send("User Added Successfully...!");
     }
     catch (err) {
-        res.status (400). send ("Some Error While Adding A User...!!" + err.message);
+        res.status(400).send("Some Error While Adding A User...!!" + err.message);
     }
 })
 
 // API call to get User with specific email
-app.get ("/user", async (req, res) => {
+app.get("/user", async (req, res) => {
     const userEmail = req.body.emailId;
 
     try {
-        const user = await User.findOne ({ emailId : userEmail });
+        const user = await User.findOne({ emailId: userEmail });
         if (!user) {
-            res.status(400).send ("User with This Email Not Found");
+            res.status(400).send("User with This Email Not Found");
         }
         else {
-            res.send (user);
+            res.send(user);
         }
     }
 
     catch (err) {
-        res.status(400).send ("Something Went Wrong...!!!");
+        res.status(400).send("Something Went Wrong...!!!");
     }
 })
 // Instead of findOne we can also use find And don't pass any filter but find will return an array which 
 // contains all the documents with that email and find will return the oldest email 
 
 // API call to get All User (FEED)
-app.get ("/feed", async (req, res) => {
+app.get("/feed", async (req, res) => {
     try {
-        const users = await User.find ();
+        const users = await User.find();
         if (users.length === 0) {
-            res.status(400).send ("No User Found");
+            res.status(400).send("No User Found");
         }
         else {
-            res.send (users);
+            res.send(users);
         }
     }
     catch (err) {
@@ -58,16 +58,16 @@ app.get ("/feed", async (req, res) => {
 })
 
 // API call to get uesr by ID
-app.get ('/userID', async (req, res) => {
+app.get('/userID', async (req, res) => {
     const userId = req.body.userId;
     try {
-        console.log (userId)
-        const user = await User.findById ( userId );
+        console.log(userId)
+        const user = await User.findById(userId);
         if (!user) {
-            res.status (400).send ("User Not Found...!");
+            res.status(400).send("User Not Found...!");
         }
         else {
-            res.send (user);
+            res.send(user);
         }
     }
     catch (err) {
@@ -76,28 +76,37 @@ app.get ('/userID', async (req, res) => {
 })
 
 // API call to DELETE user by ID
-app.delete ("/user", async (req, res) => {
+app.delete("/user", async (req, res) => {
     const userId = req.body.userId;
 
     try {
-        const user = await User.findByIdAndDelete (userId);
-        res.send ({
-            message : "User Deleted Successfully...!",
-            userDeleted : user
+        const user = await User.findByIdAndDelete(userId);
+        res.send({
+            message: "User Deleted Successfully...!",
+            userDeleted: user
         });
     }
     catch (err) {
-        res.status(400).send ("Something Went Wrong...!!" + err.message);
+        res.status(400).send("Something Went Wrong...!!" + err.message);
     }
 })
 
 // API call to UPDATE user by ID
-app.patch("/user", async (req, res) => {
-    const userId = req.body.userId; // Ensure this is correctly referenced
-    const data = req.body; // Get all data from the body
+app.patch("/user/:userId", async (req, res) => {
+    const userId = req.params?.userId;
+    const data = req.body;
 
     try {
-        // Await the result of the update operation
+        const ALLOWED_UPDATES = ["photoUrl", "about", "gender", "age", "skills"]
+        const isUpdateAllowed = Object.keys (data).every ((key) => ALLOWED_UPDATES.includes (key));
+        if (!isUpdateAllowed) {
+            throw new Error ("Update is Not Allowed...!");
+        }
+
+        if (data?.skills.length > 10) {
+            throw new Error ("You can not add more than 10 skills");
+        }
+
         const user = await User.findByIdAndUpdate(userId, data, {
             new: true, // To return the updated document
             runValidators: true // To ensure validation rules are applied
@@ -126,7 +135,7 @@ app.patch("/userEmail", async (req, res) => {
 
     try {
         // Await the result of the update operation
-        const user = await User.findOneAndUpdate(  { emailId : userEmail } , data, {
+        const user = await User.findOneAndUpdate({ emailId: userEmail }, data, {
             new: true, // To return the updated document
             runValidators: true // To ensure validation rules are applied
         });
