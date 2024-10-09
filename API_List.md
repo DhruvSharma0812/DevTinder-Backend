@@ -15,6 +15,6 @@
 - POST /request/review/:status/:requestId   // It will handle accept and reject case
 
 ## userRouter
+- GET /user/requests/recieved
 - GET /user/connections
-- GET /user/requests
 - GET /user/feed - Gets you the profiles of other users on platform
