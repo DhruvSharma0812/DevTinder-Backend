@@ -11,12 +11,8 @@
 - PATCH /profile/password
 
 ## connectionRequestRouter
-### POST /request/send/status/:userId        // It will hadnle interested and ignored case
--- POST /request/send/intereted/:userId
--- POST /request/send/ignored/:userId
-
-- POST /request/review/accepted/:requestId
-- POST /request/review/rejected/:requestId
+- POST /request/send/:status/:toUserId      // It will handle both interested and ignored case
+- POST /request/review/:status/:requestId   // It will handle accept and reject case
 
 ## userRouter
 - GET /user/connections
