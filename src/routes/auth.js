@@ -47,7 +47,10 @@ authRouter.post ("/login", async (req, res) => {
 
             // Add Token to cookie and send response
             res.cookie ( "token", token, { expires : new Date ( Date.now() + 8 * 3600000 )} )
-            res.send ("Login Success...!");
+            res.json ({
+                message : "Login Success...!",
+                data : user,
+            });
         }
         else {
             throw new Error ("Invlaid Credentials...!");
