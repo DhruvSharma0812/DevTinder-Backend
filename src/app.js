@@ -13,20 +13,12 @@ const requestRouter = require('./routes/requests');
 const userRouter = require('./routes/user');
 const cors = require("cors");
 
-const allowedOrigins = ["http://localhost:5173", "http://54.87.198.108"]; // Allow both local and deployed frontend
-
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
-    credentials: true, // Allow cookies/session sharing
-    methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS",
-    allowedHeaders: "Content-Type,Authorization",
-}));
+app.use(
+    cors({
+      origin: "http://localhost:5173",
+      credentials: true,
+    })
+  );
 app.use (express.json());
 app.use (cookieParser());
 
