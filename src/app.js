@@ -13,10 +13,14 @@ const requestRouter = require('./routes/requests');
 const userRouter = require('./routes/user');
 const cors = require("cors");
 
-app.use (cors( {
-    origin : "http://localhost:5173",
-    credentials: true,
-} ));
+
+app.use(cors({
+    origin: "*", // Allows all origins
+    credentials: true, // Allows cookies & authorization headers
+    methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS", // Allows specific methods
+    allowedHeaders: "Content-Type,Authorization", // Allows these headers
+}));
+
 app.use (express.json());
 app.use (cookieParser());
 
@@ -31,7 +35,7 @@ connectDB()
         console.log("Database Connected Succesfully....!");
         app.listen(7777, () => {
             // This function takes port number and callback function
-            console.log("Server is Running on port 3000....");
+            console.log("Server is Running on port 7777....");
         })
     })
     .catch((err) => {
